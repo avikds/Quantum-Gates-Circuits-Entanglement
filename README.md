@@ -4,11 +4,11 @@ An analytical and computational study of single-qubit unitary dynamics, non-comm
 
 ---
 
-## Overview & Mathematical Conventions
+# Overview & Mathematical Conventions
 
 This repository provides an end-to-end examination of fundamental quantum circuit operations, state space geometry, and bipartite quantum correlations. The executable notebook [`Quantum_Gates_Circuits_Entanglement.ipynb`](Quantum_Gates_Circuits_Entanglement.ipynb) integrates analytical derivations in Dirac notation with numerical simulations executing 1024 measurement shots per circuit on the `AerSimulator` backend.
 
-### 1. State Space & Computational Basis
+## 1. State Space & Computational Basis
 Single-qubit quantum states reside in a two-dimensional complex Hilbert space $\mathcal{H}_2 \cong \mathbb{C}^2$, spanned by the orthonormal computational basis states:
 
 $$
@@ -30,7 +30,7 @@ $$
 
 where $\theta \in [0, \pi]$ and $\phi \in [0, 2\pi)$ define spherical coordinates on the unit Bloch sphere.
 
-### 2. Single-Qubit Operator Generators
+## 2. Single-Qubit Operator Generators
 The unitary operators evaluated throughout this investigation include the Pauli operators and the Hadamard transformation:
 
 $$
@@ -54,14 +54,14 @@ $$
 X^2 = Z^2 = H^2 = I, \quad X Z = -Z X, \quad H X H = Z, \quad H Z H = X
 $$
 
-### 3. Qiskit Little-Endian Register Indexing
+## 3. Qiskit Little-Endian Register Indexing
 Composite Hilbert spaces of $n$ qubits are constructed through the tensor product $\mathcal{H}^{\otimes n} = \bigotimes_{k=0}^{n-1} \mathcal{H}_k$. Qiskit adopts the **little-endian** indexing convention: qubit index $0$ occupies the least significant bit (LSB, rightmost position in the ket), and index $n-1$ occupies the most significant bit (MSB, leftmost position):
 
 $$
 |q_{n-1} \dots q_1 q_0\rangle = |q_{n-1}\rangle \otimes \dots \otimes |q_1\rangle \otimes |q_0\rangle
 $$
 
-### 4. Controlled-NOT (CNOT) Entangling Operator
+## 4. Controlled-NOT (CNOT) Entangling Operator
 The two-qubit Controlled-NOT operator with control qubit $q_0$ and target qubit $q_1$ applies a conditional Pauli $X$ bit-flip:
 
 $$
@@ -81,14 +81,14 @@ $$
 
 ---
 
-## Detailed Investigation & Numerical Results
+# Detailed Investigation & Numerical Results
 
-### 1. Single-Qubit Gate Sequencing & Non-Commutativity
+## 1. Single-Qubit Gate Sequencing & Non-Commutativity
 Unitary operators on Hilbert spaces do not generally commute ($[U_i, U_j] \neq 0$). We examine two tripartite gate sequences applied to the initial ground state $|\psi_0\rangle = |0\rangle$:
 - **Circuit A:** $H \to X \to Z$
 - **Circuit B:** $Z \to X \to H$
 
-#### Analytical State Evolution
+### Analytical State Evolution
 - **Circuit A ($H \to X \to Z$):**  
   $|0\rangle \xrightarrow{H} |+\rangle = \frac{|0\rangle + |1\rangle}{\sqrt{2}} \xrightarrow{X} |+\rangle \xrightarrow{Z} |-\rangle = \frac{|0\rangle - |1\rangle}{\sqrt{2}}$  
   *Algebraic mechanism:* The intermediate state $|+\rangle$ is an eigenstate of the Pauli $X$ operator with eigenvalue $+1$ ($X|+\rangle = +1|+\rangle$), rendering the $X$ operation stationary on this state.
@@ -96,9 +96,9 @@ Unitary operators on Hilbert spaces do not generally commute ($[U_i, U_j] \neq 0
   $|0\rangle \xrightarrow{Z} |0\rangle \xrightarrow{X} |1\rangle \xrightarrow{H} |-\rangle = \frac{|0\rangle - |1\rangle}{\sqrt{2}}$  
   *Algebraic mechanism:* The ground state $|0\rangle$ is an eigenstate of the Pauli $Z$ operator with eigenvalue $+1$ ($Z|0\rangle = +1|0\rangle$), meaning the initial $Z$ gate leaves the state vector invariant.
 
-#### Operator and Trajectory Synthesis
+### Operator and Trajectory Synthesis
 
-##### Unitary Product Equivalence
+#### Unitary Product Equivalence
 Applying the Hadamard intertwining identity $X H = H Z$:
 - $U_A = Z X H = Z (H Z) = (Z H) Z$
 - $U_B = H X Z = (Z H) Z$
@@ -112,7 +112,7 @@ U_A = U_B = \frac{1}{\sqrt{2}}\begin{pmatrix}
 \end{pmatrix}
 $$
 
-##### State Fidelity
+#### State Fidelity
 Both circuits prepare the identical terminal statevector $|-\rangle$, yielding state fidelity:
 
 $$
@@ -121,30 +121,30 @@ $$
 
 with complex inner product $\langle \psi_A | \psi_B \rangle = 1.000000 + 0.000000j$.
 
-##### Bloch Sphere Geodesics
+#### Bloch Sphere Geodesics
 Circuit A traverses through the positive equatorial coordinate $(+1, 0, 0)$ prior to rotating to $(-1, 0, 0)$. Circuit B traverses through the South pole $(0, 0, -1)$ before mapping to the negative equatorial axis $(-1, 0, 0)$.
 
-##### Empirical Measurement Statistics
+#### Empirical Measurement Statistics
 Across 1024 shots on the `AerSimulator`, both circuits display balanced binomial readout distributions matching theoretical expectations ($P=0.50$):
 - Circuit A: $|0\rangle = 526 \text{ counts}$, $|1\rangle = 498 \text{ counts}$
 - Circuit B: $|0\rangle = 526 \text{ counts}$, $|1\rangle = 498 \text{ counts}$
 
 ---
 
-### 2. Custom Single-Qubit Circuit Synthesis
+## 2. Custom Single-Qubit Circuit Synthesis
 A 4-gate sequence satisfying the constraints (minimum 4 gates, repeated gate, non-session architecture) was implemented on $q_0$:
 
 $$
 \text{Gate Sequence: } X \to H \to Z \to X
 $$
 
-#### State Evolution from $|0\rangle$
+### State Evolution from $|0\rangle$
 - **Step 1 (Pauli $X$ gate):** $|\psi_1\rangle = X|0\rangle = |1\rangle$
 - **Step 2 (Hadamard $H$ gate):** $|\psi_2\rangle = H|1\rangle = |-\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)$
 - **Step 3 (Pauli $Z$ gate):** $|\psi_3\rangle = Z|-\rangle = |+\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)$
 - **Step 4 (Pauli $X$ gate):** $|\psi_4\rangle = X|+\rangle = |+\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)$
 
-#### Net Unitary & Challenge Equivalence
+### Net Unitary & Challenge Equivalence
 
 $$
 U_{\text{custom}} = X Z H X = X H = \frac{1}{\sqrt{2}}\begin{pmatrix}
@@ -159,12 +159,12 @@ Acting on $|0\rangle$, the circuit prepares $|\psi_{\text{final}}\rangle = |+\ra
 
 ---
 
-### 3. Bipartite Systems: Product Superposition vs. Entanglement
+## 3. Bipartite Systems: Product Superposition vs. Entanglement
 Two canonical two-qubit configurations initialized in $|\psi_0\rangle = |00\rangle$ were characterized:
 - **Circuit A (Independent Superposition):** Local Hadamards on both qubits ($H \otimes H$).
 - **Circuit B (Entangled Bell State):** Hadamard on control qubit $q_0$ followed by $CX_{(0 \to 1)}$.
 
-#### Mathematical Characterization & Subsystem Analytics
+### Mathematical Characterization & Subsystem Analytics
 
 | Metric / Property | Circuit A (Independent Superposition) | Circuit B (Entangled State $\vert \Phi^+ \rangle$) |
 | :--- | :--- | :--- |
@@ -179,7 +179,7 @@ Two canonical two-qubit configurations initialized in $|\psi_0\rangle = |00\rang
 
 ---
 
-### 4. Bell State Challenge ($|\Psi^+\rangle$)
+## 4. Bell State Challenge ($|\Psi^+\rangle$)
 The assignment mandates synthesizing the Bell state:
 
 $$
@@ -188,7 +188,7 @@ $$
 
 without copying the session circuit (which positioned $X$ prior to $H$ on qubit 0).
 
-#### Circuit Architecture
+### Circuit Architecture
 The circuit applies a post-entanglement local Pauli $X$ operation to the control register:
 
 $$
@@ -199,7 +199,7 @@ $$
 - **Entanglement:** $CX_{(0 \to 1)}\frac{1}{\sqrt{2}}(|00\rangle + |01\rangle) = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle) = |\Phi^+\rangle$
 - **Local Bit-Flip:** $(I \otimes X_0)\frac{1}{\sqrt{2}}(|00\rangle + |11\rangle) = \frac{1}{\sqrt{2}}(|01\rangle + |10\rangle) = |\Psi^+\rangle$
 
-#### Physical Origin of Zero Amplitudes for $|00\rangle$ and $|11\rangle$
+### Physical Origin of Zero Amplitudes for $|00\rangle$ and $|11\rangle$
 Expanding the terminal state:
 
 $$
@@ -211,7 +211,7 @@ By the Born rule, projective measurement probabilities are $P(x) = |\langle x | 
 
 ---
 
-### 5. Complete Orthonormal Bell Basis
+## 5. Complete Orthonormal Bell Basis
 The four maximally entangled Bell states form an orthonormal basis for $\mathcal{H}_2 \otimes \mathcal{H}_2$:
 
 | Bell State | Statevector | Observable Outcomes | Empirical Counts (1024 Shots) |
@@ -221,7 +221,7 @@ The four maximally entangled Bell states form an orthonormal basis for $\mathcal
 | **$\Psi^+$** | $\frac{1}{\sqrt{2}}(\vert 01 \rangle + \vert 10 \rangle)$ | {01, 10} | $01: 514, \; 10: 510$ |
 | **$\Psi^-$** | $\frac{1}{\sqrt{2}}(\vert 01 \rangle - \vert 10 \rangle)$ | {01, 10} | $01: 514, \; 10: 510$ |
 
-#### Invariance of Computational Probabilities Under Relative Phase
+### Invariance of Computational Probabilities Under Relative Phase
 - $|\Phi^+\rangle$ and $|\Phi^-\rangle$ differ solely by an internal phase of $\pi$ radians ($e^{i\pi} = -1$) on the $|11\rangle$ amplitude.
 - Computational measurement evaluates diagonal projection operators $\Pi_x = |x\rangle\langle x|$. Because $|-1/\sqrt{2}|^2 = |+1/\sqrt{2}|^2 = 1/2$, the phase factor is annihilated under modulus squaring.
 - An identical condition applies to $|\Psi^+\rangle$ and $|\Psi^-\rangle$ on the $\{|01\rangle, |10\rangle\}$ subspace.
@@ -229,7 +229,7 @@ The four maximally entangled Bell states form an orthonormal basis for $\mathcal
   - $(X \otimes X)|\Phi^+\rangle = +1|\Phi^+\rangle, \quad (X \otimes X)|\Phi^-\rangle = -1|\Phi^-\rangle$
   - $(X \otimes X)|\Psi^+\rangle = +1|\Psi^+\rangle, \quad (X \otimes X)|\Psi^-\rangle = -1|\Psi^-\rangle$
 
-#### Gram Matrix Orthonormality
+### Gram Matrix Orthonormality
 Mutual inner products computed between all pairs confirm exact orthonormality:
 
 $$
@@ -247,10 +247,10 @@ $$
 
 ---
 
-### 6. Entanglement Detective Diagnostic
+## 6. Entanglement Detective Diagnostic
 Three test circuits were subjected to statevector derivation, density matrix diagnostics, and 1024-shot simulation:
 
-#### Diagnostic Summary Table
+### Diagnostic Summary Table
 
 | Circuit | Gate Operations | Terminal State | Classification | Schmidt Rank | Entropy $S(\rho_0)$ | Empirical Counts (1024 Shots) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
@@ -258,7 +258,7 @@ Three test circuits were subjected to statevector derivation, density matrix dia
 | **2** | $H_0, H_1$ | $\vert + \rangle_1 \otimes \vert + \rangle_0$ | **Separable** | $r = 1$ | $0.0000\text{ ebits}$ | $00: 267, \; 01: 272, \; 10: 236, \; 11: 249$ |
 | **3** | $X_0 \to H_0, \; H_1 \to CX_{(0 \to 1)}$ | $\vert + \rangle_1 \otimes \vert - \rangle_0$ | **Separable** | $r = 1$ | $0.0000\text{ ebits}$ | $00: 267, \; 01: 272, \; 10: 236, \; 11: 249$ |
 
-#### Mechanism of Circuit 3 Separability
+### Mechanism of Circuit 3 Separability
 In Circuit 3, prior to the CNOT operation, the control qubit is prepared in $|-\rangle_0 = \frac{1}{\sqrt{2}}(|0\rangle_0 - |1\rangle_0)$ and the target qubit is prepared in $|+\rangle_1 = \frac{1}{\sqrt{2}}(|0\rangle_1 + |1\rangle_1)$.
 
 Applying the controlled operator $CX_{(0 \to 1)} = |0\rangle\langle 0|_0 \otimes I_1 + |1\rangle\langle 1|_0 \otimes X_1$:
@@ -277,21 +277,21 @@ The CNOT operation acts as an exact identity transformation. The state remains a
 
 ---
 
-### 7. Conceptual Solutions
+## 7. Conceptual Solutions
 
-#### 1. Single-Qubit Superposition vs. Two-Qubit Entanglement
+### 1. Single-Qubit Superposition vs. Two-Qubit Entanglement
 A single-qubit superposition is a linear combination of basis vectors within an isolated two-dimensional Hilbert space, expressed as $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle \in \mathcal{H}_2$, possessing fully determined local physical properties. A two-qubit entangled state is a non-factorable vector in $\mathcal{H}_2 \otimes \mathcal{H}_2$ ($|\Psi\rangle \neq |\psi_1\rangle \otimes |\psi_0\rangle$); isolated subsystems do not possess independent statevectors and exhibit correlations that cannot be accounted for by local hidden-variable models.
 
-#### 2. Role of CNOT in Bell State Creation
+### 2. Role of CNOT in Bell State Creation
 The CNOT gate acts as a conditional unitary that applies a Pauli $X$ bit-flip to the target qubit conditioned on the control qubit occupying $|1\rangle$. When the control qubit is initialized in an equal superposition state $|+\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)$ and the target qubit in $|0\rangle$, the linear action of CNOT transforms the product state $\frac{1}{\sqrt{2}}(|00\rangle + |01\rangle)$ into the non-separable state $\frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$, mapping local phase coherence into non-local bipartite quantum entanglement.
 
-#### 3. Invariance of Measurement Probabilities
+### 3. Invariance of Measurement Probabilities
 Under the Born rule, projective measurement evaluates the absolute squared modulus of state amplitudes, $P(x) = |\langle x | \psi \rangle|^2$. Expressing amplitudes in polar form as $\alpha_x = r_x e^{i\theta_x}$, the outcome probability is $P(x) = r_x^2$, which is invariant under variations of the phase angle $\theta_x$. Consequently, orthogonal states differing solely in relative phases (such as $|\Phi^+\rangle$ and $|\Phi^-\rangle$) yield identical probability distributions in the computational basis while remaining distinguishable in non-commuting bases such as $X \otimes X$.
 
-#### 4. Statevector vs. Measurement Counts in Qiskit
+### 4. Statevector vs. Measurement Counts in Qiskit
 A `Statevector` represents the exact complex wave function $|\psi\rangle$ in Hilbert space, retaining all probability amplitudes and phase relationships without state collapse. Measurement counts represent empirical integer frequencies obtained from a finite number of simulated or hardware shots, subject to wavefunction collapse and statistical sampling fluctuations ($\sigma \propto 1/\sqrt{N}$).
 
-#### 5. Computational-Basis Dimensional Scaling
+### 5. Computational-Basis Dimensional Scaling
 - 1 qubit: $2^1 = 2$ basis states ($\{ |0\rangle, |1\rangle \}$)  
 - 2 qubits: $2^2 = 4$ basis states ($\{ |00\rangle, |01\rangle, |10\rangle, |11\rangle \}$)  
 - 3 qubits: $2^3 = 8$ basis states ($\{ |000\rangle, \dots, |111\rangle \}$)  
@@ -308,9 +308,9 @@ The dimension of the composite product space equals the product of subsystem dim
 
 ---
 
-## Execution & Environment Setup
+# Execution & Environment Setup
 
-### Prerequisites
+## Prerequisites
 - **Python Version:** 3.10+ (tested on Python 3.14)
 - **Required Packages:**
   - `qiskit >= 1.0.0`
@@ -318,7 +318,7 @@ The dimension of the composite product space equals the product of subsystem dim
   - `matplotlib >= 3.7.0`
   - `pylatexenc >= 2.11`
 
-### Running Locally
+## Running Locally
 ```bash
 # 1. Create and activate a virtual environment
 python -m venv .venv
@@ -335,7 +335,7 @@ jupyter lab
 ```
 Open [`Quantum_Gates_Circuits_Entanglement.ipynb`](Quantum_Gates_Circuits_Entanglement.ipynb) and select **Run All**.
 
-### Running in Google Colab
+## Running in Google Colab
 The notebook incorporates an automated environment check in Cell 1:
 ```python
 try:
@@ -349,7 +349,7 @@ Upload [`Quantum_Gates_Circuits_Entanglement.ipynb`](Quantum_Gates_Circuits_Enta
 
 ---
 
-## Repository Structure
+# Repository Structure
 
 ```
 ├── Quantum_Gates_Circuits_Entanglement.ipynb        # Primary executed Jupyter notebook with all outputs
