@@ -6,7 +6,7 @@ An analytical and computational study of single-qubit unitary dynamics, non-comm
 
 ## Overview & Mathematical Conventions
 
-This repository provides an end-to-end examination of fundamental quantum circuit operations, state space geometry, and bipartite quantum correlations. The executable notebook [`Quantum_Gates_Circuits_Entanglement_Final.ipynb`](Quantum_Gates_Circuits_Entanglement_Final.ipynb) integrates analytical derivations in Dirac notation with numerical simulations executing 1024 measurement shots per circuit on the `AerSimulator` backend.
+This repository provides an end-to-end examination of fundamental quantum circuit operations, state space geometry, and bipartite quantum correlations. The executable notebook [`Quantum_Gates_Circuits_Entanglement.ipynb`](Quantum_Gates_Circuits_Entanglement.ipynb) integrates analytical derivations in Dirac notation with numerical simulations executing 1024 measurement shots per circuit on the `AerSimulator` backend.
 
 ### 1. State Space & Computational Basis
 Single-qubit quantum states reside in a two-dimensional complex Hilbert space $\mathcal{H}_2 \cong \mathbb{C}^2$, spanned by the orthonormal computational basis states:
@@ -333,7 +333,7 @@ pip install -r requirements.txt
 # 3. Launch Jupyter and open the notebook
 jupyter lab
 ```
-Open [`Quantum_Gates_Circuits_Entanglement_Final.ipynb`](Quantum_Gates_Circuits_Entanglement_Final.ipynb) and select **Run All**.
+Open [`Quantum_Gates_Circuits_Entanglement.ipynb`](Quantum_Gates_Circuits_Entanglement.ipynb) and select **Run All**.
 
 ### Running in Google Colab
 The notebook incorporates an automated environment check in Cell 1:
@@ -345,14 +345,14 @@ try:
 except ImportError:
     !pip install -q --disable-pip-version-check qiskit qiskit-aer pylatexenc matplotlib
 ```
-Upload [`Quantum_Gates_Circuits_Entanglement_Final.ipynb`](Quantum_Gates_Circuits_Entanglement_Final.ipynb) to Google Colab and click **Runtime -> Run all**. Missing libraries are installed automatically during runtime initialization.
+Upload [`Quantum_Gates_Circuits_Entanglement.ipynb`](Quantum_Gates_Circuits_Entanglement.ipynb) to Google Colab and click **Runtime -> Run all**. Missing libraries are installed automatically during runtime initialization.
 
 ---
 
 ## Repository Structure
 
 ```
-├── Quantum_Gates_Circuits_Entanglement_Final.ipynb  # Primary executed Jupyter notebook with all outputs
+├── Quantum_Gates_Circuits_Entanglement.ipynb        # Primary executed Jupyter notebook with all outputs
 ├── requirements.txt                                 # Dependency specifications
 └── README.md                                        # Technical documentation and mathematical derivations
 ```
